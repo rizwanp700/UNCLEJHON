@@ -91,72 +91,105 @@
                 </div>
 
                 <div class="col-md-7 mb-5 mb-md-0">
-
-                    <form id="submit-form" name="submit-form" action="" method="post" class="site-form"
-                        target=" form-iframe">
+			  <form id="submit-form" name="submit-form" action="" method="post" class="site-form"
+                        target="form-iframe">
                         <iframe name="form-iframe" style="display:none" frameborder="0"></iframe>
 
-                        <h3 class="mb-5"style="color:red;">ENQUIRY FORM</h3>
-                        <div class="form-group  my-3">
-                            <label for="name">Name</label>
+                        <h3 class="mb-5">Get In Touch</h3>
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
                             <input type="text" id="name" name="name" class="form-control px-3 py-4"
                                 placeholder="Your Name" required>
+                            <small id="name-error" style="color: red; display: none;">Invalid name format</small>
+
+
                         </div>
-                        <div class="form-group  my-3">
-                            <label for="email">Email</label>
+                        <div class="form-group">
+                            <label for="email">Your Email</label>
                             <input type="email" id="email" name="email" class="form-control px-3 py-4"
                                 placeholder="Your Email" required>
+                            <small id="email-error" style="color: red; display: none;">Invalid email format</small>
                         </div>
-                        <div class="form-group  my-3">
-                            <label for="phone ">Phone</label>
-                            <input type="number" id="phone" name="phone" class="form-control px-3 py-4"
+                        <div class="form-group">
+                            <label for="phone">Your Phone</label>
+                            <input type="tel" id="phone" name="phone" class="form-control px-3 py-4"
                                 placeholder="Your Phone" required>
+                            <small id="phone-error" style="color: red; display: none;">Invalid phone number
+                                format</small>
                         </div>
                         <div class="form-group mb-5">
-                            <label for="message">Messages</label>
-                            <textarea id="message" name="message" class="form-control px-3 py-4" cols="30" rows="5"
+                            <label for="message">Write a Message</label>
+                            <textarea id="message" name="message" class="form-control px-3 py-4" cols="30" rows="10"
                                 placeholder="Write a Message" required></textarea>
+                            <small id="message-error" style="color: red; display: none;">Message is required</small>
                         </div>
-                        <div class="form-group m-5">
-                            <button type="submit" class="btn btn-primary px-4 py-3">Send Message</button>
+                        <div class="form-group">
+                            <button type="button" id="submit-form" class="btn btn-primary px-4 py-3"
+                                onclick="validateAndSubmit()">Send
+                                Message</button>
                         </div>
                     </form>
 
                     <script>
-                        function validateForm() {
-                            const name = document.getElementById("name").value;
-                            const email = document.getElementById("email").value;
-                            const phone = document.getElementById("phone").value;
-                            const message = document.getElementById("message").value;
+                        function validateAndSubmit() {
+                            var emailInput = document.getElementById("email");
+                            var nameInput = document.getElementById("name");
+                            var phoneInput = document.getElementById("phone");
+                            var messageInput = document.getElementById("message");// Add this line
 
-                            if (!name || !email || !phone || !message) {
-                                alert("Please fill out all fields.");
-                                return false;
+                            var emailError = document.getElementById("email-error");
+                            var phoneError = document.getElementById("phone-error");
+                            var nameError = document.getElementById("name-error");
+                            var messageError = document.getElementById("message-error");// Add this line
+
+                            var isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value);
+                            var isValidPhone = /^\d{10}$/.test(phoneInput.value);
+                            var isValidName = /^[a-zA-Z\s]{3,}$/.test(nameInput.value);
+                            var isValidMessage = messageInput.value.trim() !== ""; // Add this line
+
+
+                            if (!isValidEmail) {
+                                emailError.style.display = "block";
+                            } else {
+                                emailError.style.display = "none";
                             }
 
-                            if (!isValidEmail(email)) {
-                                alert("Please enter a valid email address.");
-                                return false;
+                            if (!isValidPhone) {
+                                phoneError.style.display = "block";
+                            } else {
+                                phoneError.style.display = "none";
                             }
 
-                            if (!isValidPhone(phone)) {
-                                alert("Please enter a valid phone number.");
-                                return false;
+                            if (!isValidName) {
+                                nameError.style.display = "block";
+                            } else {
+                                nameError.style.display = "none";
+                            }
+                            if (!isValidMessage) {
+                                messageError.style.display = "block";
+                            } else {
+                                messageError.style.display = "none";
                             }
 
-                            return true;
-                        }
 
-                        function isValidEmail(email) {
-                            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                            return emailRegex.test(email);
-                        }
-
-                        function isValidPhone(phone) {
-                            const phoneRegex = /^\d{10}$/; // Matches exactly 10 digits
-                            return phoneRegex.test(phone);
+                            if (isValidEmail && isValidPhone && isValidName && isValidMessage) {
+                                // Submit the form using AJAX
+                                $.ajax({
+                                    url: "https://script.google.com/macros/s/AKfycbz6O1KhFA00w4GzDomRLPTVtgaFfShJW_pZY_XjAk7YrvDzW5qzAhMhJ9F_sPfXFhqxgA/exec",
+                                    data: $("#submit-form").serialize(),
+                                    method: "post",
+                                    success: function (response) {
+                                        alert("Form submitted successfully");
+                                        window.location.reload();
+                                    },
+                                    error: function (err) {
+                                        alert("Something went wrong");
+                                    }
+                                });
+                            }
                         }
                     </script>
+
                    
                      
 
